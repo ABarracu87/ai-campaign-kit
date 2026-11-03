@@ -49,6 +49,18 @@ You direct, Claude does the rounds. Each step is one sentence.
 | 6. Languages | "Transcreate into ES, DE and IT" | One row per language, fitted to every frame |
 | 7. Motion | "Make the animated version" | A storyboard to approve, a proof, then the full set |
 
+### How feedback works
+
+You review in Figma, the way you would with a designer.
+
+1. **Pin a comment on the frame** it's about: "logo bigger", "this line wraps badly in German". Thread replies count too.
+2. **Say "read my comments"** in Claude Code.
+3. **Claude lists each comment, the frame it found under the pin, and the change it plans.** Ambiguous comments get a question instead of a guess.
+4. **Claude updates the frames in your file** and checks the result, then reports back comment by comment. You resolve the comments in Figma.
+5. **Comment again** until the frames are approved. Approved fixes are saved to your brand profile as measurements, so the next campaign starts from them.
+
+Normally nothing needs re-importing, because Claude edits the open file through the Figma connector and the canvas updates. Re-importing only applies if Claude builds through a local development plugin, and the [figma-build-skill README](https://github.com/ABarracu87/figma-build-skill#do-i-need-to-re-import-anything) explains when and how.
+
 ## What's in the box
 
 | | |
