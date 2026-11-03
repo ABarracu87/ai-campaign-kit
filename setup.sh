@@ -148,7 +148,7 @@ note "You need edit access to the campaign file."
 echo
 if yes_no "Save a Figma personal access token so Claude can read your Figma comments?" n; then
   note "Create one at figma.com -> Settings -> Security -> Personal access tokens,"
-  note "with the scope 'File comments: Read' (add 'Write' if Claude should reply)."
+  note "with the scope 'File comments: Read' (add 'Write' so Claude can reply and delete handled comments)."
   read -r -s -p "  Paste the token (hidden): " tok || true; echo
   if [ -n "${tok:-}" ]; then
     (umask 077; printf '%s\n' "$tok" > "$TOKEN_FILE"); chmod 600 "$TOKEN_FILE"

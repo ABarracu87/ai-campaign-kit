@@ -56,8 +56,9 @@ You review in Figma, the way you would with a designer.
 1. **Pin a comment on the frame** it's about: "logo bigger", "this line wraps badly in German". Thread replies count too.
 2. **Say "read my comments"** in Claude Code.
 3. **Claude lists each comment, the frame it found under the pin, and the change it plans.** Ambiguous comments get a question instead of a guess.
-4. **Claude updates the frames in your file** and checks the result, then reports back comment by comment. You resolve the comments in Figma.
-5. **Comment again** until the frames are approved. Approved fixes are saved to your brand profile as measurements, so the next campaign starts from them.
+4. **Claude updates the frames in your file** and checks the result, then reports back comment by comment.
+5. **Claude clears the round,** so old comments aren't re-applied in a later review or conversation. It saves each handled comment to a list in the campaign folder and skips it from then on. It also offers to delete the round's comments from Figma, and deletes only after you confirm. Deleting needs the Write scope on your token, and works only for comments you wrote yourself.
+6. **Comment again** until the frames are approved. Approved fixes are saved to your brand profile as measurements, so the next campaign starts from them.
 
 Normally nothing needs re-importing, because Claude edits the open file through the Figma connector and the canvas updates. Re-importing only applies if Claude builds through a local development plugin, and the [figma-build-skill README](https://github.com/ABarracu87/figma-build-skill#do-i-need-to-re-import-anything) explains when and how.
 
@@ -95,7 +96,7 @@ It asks:
   - Your compliance documents.
   - Your Figma style file and logo.
   - References you admire.
-- **Optionally, a Figma token** so Claude can read your Figma comments. The Figma connector can't read comments. The token is stored in `~/.figma-token`, readable only by you.
+- **Optionally, a Figma token** so Claude can read your Figma comments, which the Figma connector can't do. Add the Write scope too, so Claude can delete each round's comments once they're handled. The token is stored in `~/.figma-token`, readable only by you.
 - **Whether to add the Higgsfield MCP server** to Claude Code. Afterwards, run `/mcp` inside Claude Code to sign in.
 
 Then it checks for `python3` and `ffmpeg`.
