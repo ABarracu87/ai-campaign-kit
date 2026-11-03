@@ -63,6 +63,15 @@ else
   ask languages    "Ad languages (comma-separated codes)" "EN"
   ask workspace    "Folder where campaign folders should live" "$HOME/campaigns-workspace"
   echo
+  note "Your ad sizes. Every format is built from this list (a brief can override it)."
+  note "Write WxH and a name, separated by ';'  e.g.  1080x1080 Feed; 1080x1920 Story"
+  ask static_sizes "Static ad sizes"
+  while [ -n "$static_sizes" ] && ! printf '%s' "$static_sizes" | grep -Eq '[0-9]+ *[xX×] *[0-9]+'; do
+    note "No WxH size found in that answer. Example: 1080x1080 Feed"
+    ask static_sizes "Static ad sizes"
+  done
+  ask motion_sizes "Motion ad sizes and lengths, blank if none  e.g. 1080x1920 15s; 1080x1080 6s"
+  echo
   note "Sources Claude will derive your guidelines from (paths or URLs, separate with ';')."
   ask src_ads      "Past ads you rate: a folder of images, or links (3+ is best)"
   ask src_rejected "Ads or copy that were rejected, if you kept any"
@@ -92,6 +101,8 @@ a section from memory or from another brand.
 | brand.languages | $languages |
 | brand.workspace | $workspace |
 | brand.approver | $approver |
+| brand.static_sizes | $static_sizes |
+| brand.motion_sizes | $motion_sizes |
 
 ## Sources
 

@@ -143,14 +143,14 @@ These are questions, not rules. The reviewer's answers decide which of them matt
 
 Load `figma-build` before writing any Figma code.
 
-**Sizes:** take them from the brief. If the brief doesn't list them, use the platforms' current recommended sizes. State that they came from the platform, and check them at the time of the campaign.
+**Sizes come from the person, never from this skill.** Use the brief's sizes first, then `brand.static_sizes` from `brand.md`. If neither lists any, ask for them before building. Never assume platform defaults or reuse another campaign's sizes. Name frames after the size and the person's label for it, e.g. `<CODE>_<WxH>_<label>_<LANG>_v<N>`, unless the brief names them.
 
 **Visual identity (first run):** read type, colours, shapes and logo from the Figma style file or website. Pull exact values from the file (styles, variables, node fills), not from screenshots. Write them to `brand.md → Visual identity` and get approval.
 
 **Layout per format:** derive it, don't copy it.
-- **Build one format first,** usually the square, from the stack and the identity. Get approval.
+- **Build one format first,** the first size in the person's list unless they choose another, from the stack and the identity. Get approval.
 - **Measure the approved frame:** the position and size of each element as a fraction of the frame, the copy column's width, and the gap between the hero and the subject. Write the measurements to `brand.md → Format layouts`.
-- **For each other aspect ratio, start from the platform's safe zones,** meaning the areas the platform UI covers (Reels and Stories cover the top and bottom). Don't just stretch the square. Tall formats usually need their own arrangement. Propose one, then get feedback through Figma comments.
+- **For each other size the person listed, start from the target placement's safe zones,** meaning the areas the platform UI covers (Reels and Stories cover the top and bottom). Don't just stretch the square. Tall formats usually need their own arrangement. Propose one, then get feedback through Figma comments.
 - **No hard crops:** extend the master to each ratio with the image model ("extend and reframe this exact image…"), then check the new area for a seam.
 
 **Checks before hand-off, for every frame:**
@@ -188,12 +188,12 @@ Load `figma-build` before writing any Figma code.
 
 ## 10. Motion version
 
-The procedure is general. The timings come from the storyboard, never from a previous campaign.
+The procedure is general. Sizes and lengths come from the brief, then `brand.motion_sizes`; if neither has them, ask. Timings come from the storyboard, never from a previous campaign.
 
 1. **Storyboard first:** beats with timings, which element enters when, and what the picture does. Get a yes before spending credits.
-2. **AI animates the picture, never the text.** Generate an image-to-video plate from the approved master through the Higgsfield MCP, with no text and no generated audio. Video is the expensive step: ask the MCP for the credit cost and confirm it with the person before running.
+2. **AI animates the picture, never the text.** Generate an image-to-video plate from the approved master through the Higgsfield MCP, at the length the person asked for, with no text and no generated audio. Video is the expensive step: ask the MCP for the credit cost and confirm it with the person before running.
 3. **Text as layers:** export one transparent full-frame PNG per stack element from a "<CODE> — video layers" Figma page, made of clones of the approved frame. Hide the other elements with **opacity 0, not visible=false**: hiding collapses auto-layout and moves everything.
-4. **Compose** with `tools/compose.py <plate> <layers> <out> --scale W H --crop X Y`. Set its `TIMELINE` and `SFX` from the storyboard. Pass the same scale and offset as the image layer in the Figma frame, so the motion matches the static.
+4. **Compose** with `tools/compose.py <plate> <layers> <out> --size W H --duration S --scale W H --crop X Y`, with the size and length from the person's list. Set its `TIMELINE` and `SFX` from the storyboard. Pass the same scale and offset as the image layer in the Figma frame, so the motion matches the static.
 5. **Sync to the plate, not the prompt:** pull frames every 0.3 s around each key beat. Models rarely land a beat at the time the prompt asked for, so move the text and sound cues to where the beat actually happens.
-6. **Make one tall English proof before the full set.**
+6. **Make one proof in the first motion size, in the first language, before the full set.**
 7. **Spec:** take it from the brief or the platform. Check that the music and generated media are licensed for paid ads.

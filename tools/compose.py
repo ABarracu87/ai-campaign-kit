@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Compose a motion ad: AI motion plate + Figma text layers + audio -> H.264/AAC MP4.
 
-usage: compose.py <plate.mp4> <layers_dir> <out.mp4> [--crop W H X Y --scale W H]
+usage: compose.py <plate.mp4> <layers_dir> <out.mp4> --size W H --duration S [--scale W H --crop X Y]
 Layers are full-frame transparent PNGs named NN_key.png (exported from the
 "<CODE> — video layers" Figma page), so positions match the approved static exactly.
 """
 import subprocess, sys, os, argparse
 
-DUR = 15.0
 FPS = 30
 # key: (start s, fade s, slide px from below). EXAMPLE values from one storyboard: replace them with yours;
 # the disclaimer, scrims and AI tag are on screen for the whole spot.
@@ -29,12 +28,14 @@ SFX = [("whoosh.wav", 1.45, 1.0), ("impact.wav", 1.95, 0.8), ("impact.wav", 5.0,
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("plate"); ap.add_argument("layers"); ap.add_argument("out")
-    ap.add_argument("--size", nargs=2, type=int, default=[1080, 1920])
+    ap.add_argument("--size", nargs=2, type=int, required=True, help="output size W H, from your format list")
+    ap.add_argument("--duration", type=float, required=True, help="spot length in seconds")
     ap.add_argument("--scale", nargs=2, type=int, help="scale plate to WxH before cropping")
     ap.add_argument("--crop", nargs=2, type=int, default=[0, 0], help="crop offset X Y after scaling")
     ap.add_argument("--audio", default=os.path.join(os.path.dirname(__file__), "audio"))
     a = ap.parse_args()
     W, H = a.size
+    DUR = a.duration
     layers = sorted(f for f in os.listdir(a.layers) if f.endswith(".png"))
     missing = set(TIMELINE) - {f[:-4] for f in layers}
     assert not missing, f"missing layers: {missing}"

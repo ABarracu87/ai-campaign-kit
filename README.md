@@ -18,9 +18,9 @@ Free and open source (MIT). It runs inside [Claude Code](https://claude.com/clau
 |---|---|
 | **Concepts** | 8–10 creative routes in one table (hook, sub-line, sticker, image idea), with a shortlist of 3 and the reasons |
 | **Master visuals** | 4K hero images generated through Higgsfield, with clean space for your copy |
-| **Static formats** | Every size your brief asks for, built in your Figma file. The default set is Meta 1080×1080, 1080×1350, 1080×1920 and Performance Max 1200×1200, 960×1200, 1200×628 |
+| **Static formats** | Every size on your list, built in your Figma file. You enter your sizes once in setup, and a brief can override them |
 | **Languages** | Transcreated, not translated, one row per language, right-to-left scripts mirrored |
-| **Motion** | A 15-second video: the picture animated by AI, your copy layered on top so it stays sharp and editable |
+| **Motion** | A video at your sizes and lengths: the picture animated by AI, your copy layered on top so it stays sharp and editable |
 | **A paper trail** | Every round versioned, every rejected option listed with its reason, open questions kept on the front page |
 
 ## Why it sounds like you
@@ -44,7 +44,7 @@ You direct, Claude does the rounds. Each step is one sentence.
 | 1. Brief | "New campaign SPRING20, here is the brief: <path>" | A campaign folder, with the offer, eligibility, disclaimer and compliance pulled out |
 | 2. Copy | "Give me 8–10 concepts" | The concept table and a shortlist |
 | 3. Visuals | "Make master visuals for A, C and F in Figma: <file>" | Text-free 4K masters on a Figma page |
-| 4. Formats | "Build all static formats for A" | Every size, laid out from your measurements |
+| 4. Formats | "Build all static formats for A" | Every size on your list, laid out from your measurements |
 | 5. Feedback | Comment in Figma, then "read my comments" | Claude reads them and applies them |
 | 6. Languages | "Transcreate into ES, DE and IT" | One row per language, fitted to every frame |
 | 7. Motion | "Make the animated version" | A storyboard to approve, a proof, then the full set |
@@ -89,6 +89,7 @@ Normally nothing needs re-importing, because Claude edits the open file through 
 It asks:
 - **Before replacing** any skill with the same name that you already have. A backup is kept.
 - **The basics:** brand name, what you sell, languages, and where campaign folders should live.
+- **Your sizes:** the static ad sizes you run (for example `1080x1080 Feed; 1080x1920 Story`), and your motion sizes and lengths. Nothing is built at a size you didn't enter or a brief didn't ask for.
 - **Who signs off** copy and compliance.
 - **Where your material is:**
   - Past ads you rate (3 or more is best) and any rejected work.
