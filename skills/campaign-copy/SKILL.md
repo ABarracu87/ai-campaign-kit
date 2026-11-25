@@ -1,13 +1,17 @@
 ---
 name: campaign-copy
-description: Promo and ad campaigns end to end, from a creative brief to on-image copy, concepts, master visuals, static ad formats in Figma, transcreations and a motion version. It ships no brand's guidelines. It carries the procedures for deriving them (voice, ad stack, hooks, compliance, visual taste, format layouts, transcreation) from the brand's own material, stores them in references/brand.md, and applies them. Use whenever a campaign, promo, discount code, brief, ad creative, Meta or Performance Max copy is mentioned, or the person asks to derive or update brand guidelines. Load `copy` for general craft; this skill overrides it for campaigns.
+description: Promo and ad campaigns end to end, from a creative brief to on-image copy, concepts, master visuals, static ad formats in Figma, transcreations and a motion version. It ships no brand's guidelines. It carries the procedures for deriving them (voice, ad stack, hooks, compliance, visual taste, format layouts, transcreation) from the brand's own material, stores them in the person's brand.md, and applies them. Use whenever a campaign, promo, discount code, brief, ad creative, Meta or Performance Max copy is mentioned, or the person asks to derive or update brand guidelines. Load `copy` for general craft; this skill overrides it for campaigns.
 ---
 
 # Campaign copy
 
 This skill contains **no guidelines**. It contains the way to derive them. Every rule a
-campaign follows comes from the brand's own material, is written into
-`references/brand.md`, and is approved by the person before use.
+campaign follows comes from the brand's own material, is written into the brand
+profile, and is approved by the person before use.
+
+**Where the brand profile lives:** `$CAMPAIGN_BRAND_FILE` if set, else
+`~/.claude/campaign-kit/brand.md`. Never write it inside this skill's folder: plugin
+updates replace that folder. Called `brand.md` below.
 
 Every derivation below follows the same loop:
 
@@ -21,7 +25,14 @@ Never present a derived rule as a fact about the brand until step 4 has happened
 
 ## 0. First run: derive the brand
 
-When `brand.md` sections read "Not derived yet", run sections 2–5, 7, 8 and 9 in derivation mode before writing any campaign copy. If `brand.md` is missing, ask the person to run `setup.sh` from the kit.
+If `brand.md` is missing, set it up in the chat. Ask these, a few at a time, and let the person leave any blank:
+- **Facts:** brand name; what it sells; ad languages; the folder where campaign folders live; who signs off copy and compliance (a role, not a name).
+- **Sizes:** static ad sizes as `WxH label` (e.g. `1080x1080 Feed; 1080x1920 Story`), then motion sizes and lengths. Re-ask if the answer contains no `WxH`. Never suggest defaults.
+- **Sources:** past ads they rate (3+ is best); rejected work; website; brand book; compliance or legal documents; Figma style file; logo; ads they admire from any brand.
+
+Copy `brand-template.md` (next to this file) to the brand profile path, fill each `{{field}}` with the answer (blank stays blank) and `{{created}}` with today's date, and show the person the Facts table.
+
+When `brand.md` sections read "Not derived yet", run sections 2–5, 7, 8 and 9 in derivation mode before writing any campaign copy.
 
 Say which sections you could not derive and why (for example "no past ads, so the ad stack is a proposal, not a derivation").
 
@@ -193,7 +204,7 @@ The procedure is general. Sizes and lengths come from the brief, then `brand.mot
 1. **Storyboard first:** beats with timings, which element enters when, and what the picture does. Get a yes before spending credits.
 2. **AI animates the picture, never the text.** Generate an image-to-video plate from the approved master through the Higgsfield MCP, at the length the person asked for, with no text and no generated audio. Video is the expensive step: ask the MCP for the credit cost and confirm it with the person before running.
 3. **Text as layers:** export one transparent full-frame PNG per stack element from a "<CODE> — video layers" Figma page, made of clones of the approved frame. Hide the other elements with **opacity 0, not visible=false**: hiding collapses auto-layout and moves everything.
-4. **Compose** with `tools/compose.py <plate> <layers> <out> --size W H --duration S --scale W H --crop X Y`, with the size and length from the person's list. Set its `TIMELINE` and `SFX` from the storyboard. Pass the same scale and offset as the image layer in the Figma frame, so the motion matches the static.
+4. **Compose** with `tools/compose.py` (in this skill's folder) `<plate> <layers> <out> --size W H --duration S --scale W H --crop X Y`, with the size and length from the person's list. Set its `TIMELINE` and `SFX` from the storyboard. Pass the same scale and offset as the image layer in the Figma frame, so the motion matches the static.
 5. **Sync to the plate, not the prompt:** pull frames every 0.3 s around each key beat. Models rarely land a beat at the time the prompt asked for, so move the text and sound cues to where the beat actually happens.
 6. **Make one proof in the first motion size, in the first language, before the full set.**
 7. **Spec:** take it from the brief or the platform. Check that the music and generated media are licensed for paid ads.

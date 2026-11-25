@@ -1,0 +1,14 @@
+{
+  "name": "ai-campaign-kit",
+  "description": "Brief-to-campaign skills for Claude Code.",
+  "owner": { "name": "ABarracu87", "url": "https://github.com/ABarracu87" },
+  "plugins": [
+    {
+      "name": "ai-campaign-kit",
+      "source": "./",
+      "version": "1.2.0",
+      "category": "marketing",
+      "description": "Turn one brief into a full ad campaign that sounds like your brand. Includes campaign-copy, copy and figma-build, plus the Higgsfield MCP."
+    }
+  ]
+}

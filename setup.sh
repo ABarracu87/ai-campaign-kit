@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 # First-time setup for ai-campaign-kit.
-# Installs the skills into Claude Code, asks about your brand, writes
-# campaign-copy/references/brand.md, and checks the tools the workflow needs.
+# Installs the skills into Claude Code (skip that if you installed the plugin), asks about
+# your brand, writes ~/.claude/campaign-kit/brand.md, and checks the tools the workflow needs.
 # Safe to re-run: it asks before replacing anything that already exists.
 set -euo pipefail
+shopt -u patsub_replacement 2>/dev/null || true   # bash 5.2+: keep "&" literal in answers
 
 KIT="$(cd "$(dirname "$0")" && pwd)"
 SKILLS_DIR="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"   # override for testing
 TOKEN_FILE="${FIGMA_TOKEN_FILE:-$HOME/.figma-token}"
+BRAND_FILE="${CAMPAIGN_BRAND_FILE:-$HOME/.claude/campaign-kit/brand.md}"
 
 say()  { printf '\n\033[1m%s\033[0m\n' "$*"; }
 note() { printf '  %s\n' "$*"; }
@@ -32,6 +34,10 @@ note "Press Enter to accept a [default]. Re-run this script any time to change a
 
 # ---------- 1. skills ----------
 say "1/4  Installing skills"
+note "If you installed the ai-campaign-kit plugin, the skills are already there: answer n."
+if ! yes_no "Copy the skills into $SKILLS_DIR?" y; then
+  note "skipped"
+else
 mkdir -p "$SKILLS_DIR"
 for src in "$KIT"/skills/*/; do
   name=$(basename "$src"); dest="$SKILLS_DIR/$name"
@@ -45,13 +51,11 @@ for src in "$KIT"/skills/*/; do
   cp -R "$src" "$dest"
   note "installed $name"
 done
+fi
 
 # ---------- 2. brand ----------
-BRAND_FILE="$SKILLS_DIR/campaign-copy/references/brand.md"
 say "2/4  Your brand"
-if [ ! -d "$SKILLS_DIR/campaign-copy" ]; then
-  note "campaign-copy is not installed, skipping brand questions."
-elif [ -e "$BRAND_FILE" ] && ! yes_no "A brand profile already exists. Answer the questions again and replace it?" n; then
+if [ -e "$BRAND_FILE" ] && ! yes_no "A brand profile already exists. Answer the questions again and replace it?" n; then
   note "kept $BRAND_FILE"
 else
   note "The kit does not ship anyone's guidelines. Claude derives yours from your own"
@@ -84,63 +88,13 @@ else
   ask approver     "Who signs off copy and compliance (role, not a name)"
 
   mkdir -p "$(dirname "$BRAND_FILE")"
-  cat > "$BRAND_FILE" <<EOF
-# Brand profile
-
-Created by setup.sh on $(date +%Y-%m-%d). Only the facts and sources below were given.
-Every other section is DERIVED by the campaign-copy skill from those sources (section 0 of
-the skill) and approved by the person before use. Empty means not derived yet: never fill
-a section from memory or from another brand.
-
-## Facts
-
-| Field | Value |
-|---|---|
-| brand.name | $brand_name |
-| brand.category | $category |
-| brand.languages | $languages |
-| brand.workspace | $workspace |
-| brand.approver | $approver |
-| brand.static_sizes | $static_sizes |
-| brand.motion_sizes | $motion_sizes |
-
-## Sources
-
-- **Past ads (rated):** $src_ads
-- **Rejected work:** $src_rejected
-- **Website:** $src_site
-- **Brand book / tone of voice:** $src_book
-- **Compliance / legal:** $src_legal
-- **Figma style file:** $src_figma
-- **Logo:** $src_logo
-- **Admired references:** $src_compet
-
-## Voice card
-_Not derived yet._
-
-## Ad stack
-_Not derived yet._
-
-## Hook routes
-_Not derived yet. Grows with every campaign: winners, losers and why._
-
-## Compliance
-_Not derived yet._
-
-## Visual identity
-_Not derived yet._
-
-## Format layouts
-_Not derived yet._
-
-## Taste log
-_Empty. One line per reviewer decision on a visual, with the reason._
-
-## Transcreation glossary
-_Empty. One row per approved local choice: language, source line, local line, why._
-
-## Open questions
-EOF
+  created=$(date +%Y-%m-%d)
+  out=$(cat "$KIT/skills/campaign-copy/brand-template.md")
+  for f in created brand_name category languages workspace approver static_sizes motion_sizes \
+           src_ads src_rejected src_site src_book src_legal src_figma src_logo src_compet; do
+    out=${out//"{{$f}}"/${!f}}
+  done
+  printf '%s\n' "$out" > "$BRAND_FILE"
   note "wrote $BRAND_FILE"
   if [ -n "$workspace" ]; then
     ws=${workspace/#\~/$HOME}   # expand a leading ~
@@ -171,6 +125,7 @@ fi
 echo
 note "Higgsfield (images, video, audio): use Higgsfield's official MCP server."
 note "Install guide: https://higgsfield.ai/mcp   Server: https://mcp.higgsfield.ai/mcp"
+note "The plugin adds this server for you: answer n if you installed it."
 if command -v claude >/dev/null 2>&1; then
   if yes_no "Add the Higgsfield MCP server to Claude Code now?" y; then
     claude mcp add --transport http higgsfield https://mcp.higgsfield.ai/mcp \

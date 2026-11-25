@@ -1,0 +1,10 @@
+{
+  "name": "ai-campaign-kit",
+  "version": "1.2.0",
+  "description": "Turn one brief into a full ad campaign that sounds like your brand: concepts, master visuals, static formats in Figma, transcreations and a motion version. Derives your guidelines from your own material; ships no one else's.",
+  "author": { "name": "ABarracu87", "url": "https://github.com/ABarracu87" },
+  "repository": "https://github.com/ABarracu87/ai-campaign-kit",
+  "homepage": "https://github.com/ABarracu87/ai-campaign-kit#readme",
+  "license": "MIT",
+  "keywords": ["marketing", "ad-campaign", "copywriting", "figma", "higgsfield", "transcreation"]
+}

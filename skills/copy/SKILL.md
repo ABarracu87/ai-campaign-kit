@@ -229,4 +229,4 @@ More options from the same narrow pattern will keep failing.
 ## Brand voices
 
 For ad campaigns, use the `campaign-copy` skill. It carries your brand's voice and rules
-(set up by `setup.sh`) and overrides this skill where they conflict.
+(set up on first use) and overrides this skill where they conflict.

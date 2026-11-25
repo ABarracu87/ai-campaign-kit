@@ -4,8 +4,10 @@
 
 Hand Claude a creative brief. You get concepts, master visuals, every static ad format, every language and a motion version. Everything is built in your Figma file and ready for your comments. Claude learns your voice, layout and taste from your own past work, so the ads sound like you and not like the average of the internet.
 
-```bash
-git clone https://github.com/ABarracu87/ai-campaign-kit && cd ai-campaign-kit && ./setup.sh
+In Claude Code:
+
+```
+/plugin install ai-campaign-kit --marketplace ABarracu87/ai-campaign-kit
 ```
 
 Free and open source (MIT). It runs inside [Claude Code](https://claude.com/claude-code).
@@ -66,11 +68,12 @@ Normally nothing needs re-importing, because Claude edits the open file through 
 
 | | |
 |---|---|
-| `setup.sh` | Guided first-time setup: installs the skills, asks where your brand material is, connects Figma and Higgsfield, checks your tools |
+| Plugin | Installs the three skills below and connects Higgsfield's official MCP server |
+| `setup.sh` | Optional terminal setup, for installs without the plugin or a Figma comments token |
 | `campaign-copy` skill | The playbook. How to derive each guideline, then how to run each step with it |
 | `copy` skill | Copywriting craft: angle, headlines, buttons, research, the final pass |
 | `figma-build` skill | Keeps Figma builds from failing silently. Also available on its own as [figma-build-skill](https://github.com/ABarracu87/figma-build-skill) |
-| `compose.py` | Assembles the motion ad from the AI video, your Figma text layers and audio, into a ready-to-upload MP4 |
+| `compose.py` (in `campaign-copy`) | Assembles the motion ad from the AI video, your Figma text layers and audio, into a ready-to-upload MP4 |
 | Campaign template | The folder layout every campaign uses |
 
 ## What you need
@@ -80,14 +83,19 @@ Normally nothing needs re-importing, because Claude edits the open file through 
 - **A Higgsfield account** for images, video and audio, through [Higgsfield's official MCP server](https://higgsfield.ai/mcp). Higgsfield charges in credits, and video is the most expensive step. Claude asks for the cost and waits for your yes before generating a video. Check Higgsfield's site for which plans include the MCP.
 - **`python3` and `ffmpeg`**, for the motion version. On macOS: `brew install ffmpeg`.
 
-## Setup takes one command
+## Setup
 
-```bash
-./setup.sh
+**With the plugin (recommended):**
+
+```
+/plugin install ai-campaign-kit --marketplace ABarracu87/ai-campaign-kit
 ```
 
-It asks:
-- **Before replacing** any skill with the same name that you already have. A backup is kept.
+Run `/mcp` to sign in to Higgsfield, then say *"New campaign"*. The first time, Claude asks the setup questions below in the chat and saves your answers. If your organization publishes the plugin in its library, install it from there instead.
+
+**Without the plugin**, or to save a Figma comments token: clone the repo and run `./setup.sh`.
+
+Either way, you're asked:
 - **The basics:** brand name, what you sell, languages, and where campaign folders should live.
 - **Your sizes:** the static ad sizes you run (for example `1080x1080 Feed; 1080x1920 Story`), and your motion sizes and lengths. Nothing is built at a size you didn't enter or a brief didn't ask for.
 - **Who signs off** copy and compliance.
@@ -97,10 +105,8 @@ It asks:
   - Your compliance documents.
   - Your Figma style file and logo.
   - References you admire.
-- **Optionally, a Figma token** so Claude can read your Figma comments, which the Figma connector can't do. Read scope is enough. Claude never deletes comments. The token is stored in `~/.figma-token`, readable only by you.
-- **Whether to add the Higgsfield MCP server** to Claude Code. Afterwards, run `/mcp` inside Claude Code to sign in.
-
-Then it checks for `python3` and `ffmpeg`.
+- **Optionally (`setup.sh` only), a Figma token** so Claude can read your Figma comments, which the Figma connector can't do. Read scope is enough. Claude never deletes comments. The token is stored in `~/.figma-token`, readable only by you.
+`setup.sh` also asks before replacing any skill you already have (keeping a backup), offers to add the Higgsfield MCP server, and checks for `python3` and `ffmpeg`.
 
 Restart Claude Code, then type: *"Derive our brand guidelines."*
 
@@ -116,7 +122,7 @@ Claude proposes a starting voice and layout and tells you they are proposals, no
 No. It replaces the rounds of drafting. A person still chooses the concept, comments on the layouts and approves every rule.
 
 **Is my brand data shared?**
-Your guidelines are saved in `~/.claude/skills/campaign-copy/references/brand.md` on your machine. The repo ignores that file. Images and video are generated through your own Higgsfield account.
+Your guidelines are saved in `~/.claude/campaign-kit/brand.md` on your machine (set `CAMPAIGN_BRAND_FILE` to keep it elsewhere, such as a shared team folder). Neither the plugin nor the repo contains it, and plugin updates never touch it. Images and video are generated through your own Higgsfield account.
 
 **Are the translations ready to publish?**
 They are transcreated and fitted to every frame, but a native speaker must review them before shipping, starting with non-Latin scripts.
@@ -125,7 +131,7 @@ They are transcreated and fitted to every frame, but a native speaker must revie
 Claude checks every line against the rules derived from your documents and the platforms' current ad policies. The person you name in setup signs off. Facts nobody has confirmed go to open questions, never into copy.
 
 **Can I use it with my existing skills?**
-Yes. Setup asks before replacing anything with the same name and keeps a backup.
+Yes. Plugin skills sit alongside yours. `setup.sh` asks before replacing anything with the same name and keeps a backup.
 
 ## Before you ship any campaign
 
@@ -135,8 +141,8 @@ Yes. Setup asks before replacing anything with the same name and keeps a backup.
 
 ---
 
-```bash
-git clone https://github.com/ABarracu87/ai-campaign-kit && cd ai-campaign-kit && ./setup.sh
+```
+/plugin install ai-campaign-kit --marketplace ABarracu87/ai-campaign-kit
 ```
 
 MIT licence. `figma-build` is also MIT, from [figma-build-skill](https://github.com/ABarracu87/figma-build-skill).
